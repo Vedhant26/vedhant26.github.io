@@ -1,0 +1,51 @@
+.custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent-orange);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 10px rgba(255, 165, 0, 0.8);
+}
+
+.custom-cursor.hovered {
+    transform: scale(1.2);
+}
+
+.basketball-graphic {
+    width: 100%;
+    height: 100%;
+    /* Realistic Basketball SVG Background */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23e65c00' /%3E%3Cpath d='M50,2 A48,48 0 0,1 50,98' fill='none' stroke='%231a1a1a' stroke-width='2' /%3E%3Cpath d='M2,50 A48,48 0 0,1 98,50' fill='none' stroke='%231a1a1a' stroke-width='2' /%3E%3Cpath d='M20,20 Q50,50 80,80' fill='none' stroke='%231a1a1a' stroke-width='2' opacity='0.8' /%3E%3Cpath d='M80,20 Q50,50 20,80' fill='none' stroke='%231a1a1a' stroke-width='2' opacity='0.8' /%3E%3Ccircle cx='50' cy='50' r='48' fill='url(%23grad)' /%3E%3Cdefs%3E%3CradialGradient id='grad' cx='30%25' cy='30%25' r='70%25'%3E%3Cstop offset='0%25' stop-color='%23ff8c1a' stop-opacity='0.4' /%3E%3Cstop offset='100%25' stop-color='%23993d00' stop-opacity='0.6' /%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M5,50 C5,25 25,5 50,5 C75,5 95,25 95,50 C95,75 75,95 50,95 C25,95 5,75 5,50 Z' fill='none' stroke='%231a1a1a' stroke-width='3' stroke-linecap='round' stroke-dasharray='300' stroke-dashoffset='0' opacity='0.9' /%3E%3Cpath d='M50,2 L50,98 M2,50 L98,50' stroke='%231a1a1a' stroke-width='3' /%3E%3Cpath d='M15,25 Q50,50 85,25' fill='none' stroke='%231a1a1a' stroke-width='3' /%3E%3Cpath d='M15,75 Q50,50 85,75' fill='none' stroke='%231a1a1a' stroke-width='3' /%3E%3C/svg%3E");
+    background-size: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 94, 0, 0.4);
+    animation: spin 6s infinite linear;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
