@@ -1,16 +1,61 @@
-# React + Vite
+# 🚀 Vedhant Bidari — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, interactive portfolio built with **React**, **Vite**, **Framer Motion**, **GSAP**, and **Three.js**.
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Immersive Hero Section** with scroll-driven animations
+- **Celestial 3D Background** powered by React Three Fiber
+- **Interactive Basketball Mini-Game**
+- **Smooth Page Transitions** with Framer Motion
+- **Custom Cursor** with magnetic hover effects
+- **Scroll Progress Indicator**
+- **Fully Responsive** across all devices
 
-## React Compiler
+## 🛠 Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Category | Technologies |
+|---|---|
+| **Framework** | React 19, Vite 7 |
+| **Styling** | Tailwind CSS 4, Vanilla CSS |
+| **Animation** | Framer Motion, GSAP, Lenis |
+| **3D** | Three.js, React Three Fiber |
+| **Routing** | React Router v6 |
 
-## Expanding the ESLint configuration
+## 🚀 Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+
+# Build for production
+npm run build
+
+# Deploy to GitHub Pages
+npm run deploy
+```
+
+## 📁 Project Structure
+
+```
+├── public/           # Static assets (images, fonts, icons, resume)
+├── src/
+│   ├── assets/       # Bundled assets
+│   ├── components/   # Core UI components (Hero, Navbar, etc.)
+│   ├── hooks/        # Custom React hooks
+│   ├── new-about/    # About page with interactive sections
+│   ├── styles/       # Additional stylesheets
+│   ├── App.jsx       # Root app with routing
+│   ├── main.jsx      # Entry point
+│   └── index.css     # Global styles & design tokens
+├── index.html        # HTML entry point
+├── vite.config.js    # Vite configuration
+└── package.json
+```
+
+## 📄 License
+
+© 2026 Vedhant Bidari. All rights reserved.
