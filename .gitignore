@@ -31,7 +31,7 @@ dist-ssr
 # Unused scaffolding / artifacts
 IMPLEMENT/
 .snapshots/
-*.jpeg
+/gom.jpeg
 accordion.jsx
 alert-dialog.jsx
 alert.jsx
