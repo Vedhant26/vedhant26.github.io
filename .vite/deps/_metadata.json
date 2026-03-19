@@ -1,0 +1,67 @@
+{
+  "hash": "2180ed2f",
+  "configHash": "93c72d83",
+  "lockfileHash": "2f079873",
+  "browserHash": "6585ad3d",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "7e1fafd5",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "0e1fd241",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.js",
+      "file": "react-router-dom.js",
+      "fileHash": "ee65200f",
+      "needsInterop": false
+    },
+    "framer-motion": {
+      "src": "../../node_modules/framer-motion/dist/es/index.mjs",
+      "file": "framer-motion.js",
+      "fileHash": "9ceb74a2",
+      "needsInterop": false
+    },
+    "gsap": {
+      "src": "../../node_modules/gsap/index.js",
+      "file": "gsap.js",
+      "fileHash": "188a4cda",
+      "needsInterop": false
+    },
+    "gsap/ScrollTrigger": {
+      "src": "../../node_modules/gsap/ScrollTrigger.js",
+      "file": "gsap_ScrollTrigger.js",
+      "fileHash": "1b39a2c3",
+      "needsInterop": false
+    },
+    "lucide-react": {
+      "src": "../../node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "f7c2a76d",
+      "needsInterop": false
+    },
+    "three": {
+      "src": "../../node_modules/three/build/three.module.js",
+      "file": "three.js",
+      "fileHash": "32413060",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-R3E4LXVO": {
+      "file": "chunk-R3E4LXVO.js"
+    },
+    "chunk-P6RTVJOB": {
+      "file": "chunk-P6RTVJOB.js"
+    },
+    "chunk-G3PMV62Z": {
+      "file": "chunk-G3PMV62Z.js"
+    }
+  }
+}
