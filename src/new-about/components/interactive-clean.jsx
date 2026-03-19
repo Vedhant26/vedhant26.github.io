@@ -118,7 +118,7 @@ export function InteractiveClean() {
     displayCtx.restore()
   }
 
-  const drawBrush = () => {
+  const drawBrush = (ctx, x, y) => {
     ctx.globalCompositeOperation = "source-over"
     const gradient = ctx.createRadialGradient(x, y, BRUSH_SIZE * BRUSH_HARDNESS, x, y, BRUSH_SIZE / 2)
     gradient.addColorStop(0, "rgba(255, 255, 255, 1)")
