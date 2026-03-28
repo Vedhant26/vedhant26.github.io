@@ -1,0 +1,114 @@
+﻿diff --git a/src/new-about/NewAboutPage.jsx b/src/new-about/NewAboutPage.jsx
+index 4ed9a89..8fd584f 100644
+--- a/src/new-about/NewAboutPage.jsx
++++ b/src/new-about/NewAboutPage.jsx
+@@ -4,6 +4,7 @@ import { Trophy, Award, Calendar, Code, Palette, Database, Mail, MapPin, Github,
+ import HeroSection from "./components/hero-section"
+ import IntroTextSection from "./components/intro-text-section"
+ import MasonryGallerySection from "./components/masonry-gallery-section"
++import { InteractiveClean } from "./components/interactive-clean"
+ import PageWrapper from '../components/PageWrapper';
+ 
+ export default function NewAboutPage() {
+@@ -93,15 +94,7 @@ export default function NewAboutPage() {
+                       borderRadius: '1.5rem',
+                       overflow: 'hidden',
+                     }}>
+-                      <img
+-                        src="/images/vedhant-about.jpeg"
+-                        alt="Vedhant Bidari"
+-                        style={{
+-                          width: '100%',
+-                          height: '100%',
+-                          objectFit: 'cover',
+-                        }}
+-                      />
++                      <InteractiveClean />
+                     </div>
+                   </div>
+                   <div style={{
+diff --git a/src/new-about/components/interactive-clean.jsx b/src/new-about/components/interactive-clean.jsx
+index dc94088..04fd7f7 100644
+--- a/src/new-about/components/interactive-clean.jsx
++++ b/src/new-about/components/interactive-clean.jsx
+@@ -80,18 +80,23 @@ export function InteractiveClean() {
+     return () => window.removeEventListener("resize", resizeCanvas)
+   }, [])
+ 
++  const lastInteractionTime = useRef(0)
++
+   useEffect(() => {
+     let animationFrameId = 0
+ 
+     const fadeLoop = () => {
+-      const maskCanvas = maskCanvasRef.current
+-      const maskCtx = maskCanvas?.getContext("2d")
+-      if (maskCtx && maskCanvas) {
+-        maskCtx.globalCompositeOperation = "destination-out"
+-        maskCtx.fillStyle = "rgba(0, 0, 0, 0.01)"
+-        maskCtx.fillRect(0, 0, maskCanvas.width, maskCanvas.height)
+-        maskCtx.globalCompositeOperation = "source-over"
+-        renderFrame()
++      // Only process fade and redraw if there was an interaction in the last 3 seconds
++      if (Date.now() - lastInteractionTime.current < 3000) {
++        const maskCanvas = maskCanvasRef.current
++        const maskCtx = maskCanvas?.getContext("2d")
++        if (maskCtx && maskCanvas) {
++          maskCtx.globalCompositeOperation = "destination-out"
++          maskCtx.fillStyle = "rgba(0, 0, 0, 0.01)"
++          maskCtx.fillRect(0, 0, maskCanvas.width, maskCanvas.height)
++          maskCtx.globalCompositeOperation = "source-over"
++          renderFrame()
++        }
+       }
+       animationFrameId = requestAnimationFrame(fadeLoop)
+     }
+@@ -142,6 +147,7 @@ export function InteractiveClean() {
+   }
+ 
+   const handleMouseMove = (e) => {
++    lastInteractionTime.current = Date.now()
+     if (!containerRef.current || !maskCanvasRef.current) return
+     const rect = containerRef.current.getBoundingClientRect()
+     const currentX = e.clientX - rect.left
+diff --git a/src/new-about/components/interactive-portrait.jsx b/src/new-about/components/interactive-portrait.jsx
+index 2e9be19..4eec46d 100644
+--- a/src/new-about/components/interactive-portrait.jsx
++++ b/src/new-about/components/interactive-portrait.jsx
+@@ -294,15 +294,27 @@ export default function InteractivePortrait() {
+ 
+     const clock = new THREE.Clock()
+     let t = 0
++    let isVisible = true
++
++    const observer = new IntersectionObserver(
++      ([entry]) => {
++        isVisible = entry.isIntersecting
++      },
++      { threshold: 0 }
++    )
++    observer.observe(container)
+ 
+     const animate = () => {
++      animationFrameRef.current = requestAnimationFrame(animate)
++      
++      if (!isVisible) return
++
+       const dt = clock.getDelta()
+       t += dt
+       gu.time.value = t
+       gu.dTime.value = dt
+       blob.render()
+       renderer.render(scene, camera)
+-      animationFrameRef.current = requestAnimationFrame(animate)
+     }
+ 
+     animate()
+@@ -342,6 +354,7 @@ export default function InteractivePortrait() {
+     window.addEventListener("resize", handleResize)
+ 
+     return () => {
++      observer.disconnect()
+       window.removeEventListener("resize", handleResize)
+       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
+       if (rendererRef.current) {

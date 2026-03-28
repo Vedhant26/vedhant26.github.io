@@ -5,6 +5,14 @@
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
 
+// Preload images to ensure they appear as early as possible
+if (typeof window !== "undefined") {
+  const img1 = new Image()
+  img1.src = "/images/hero-off.webp"
+  const img2 = new Image()
+  img2.src = "/images/hero-on.webp"
+}
+
 export default function InteractivePortrait() {
   const containerRef = useRef(null)
   const rendererRef = useRef(null)
@@ -31,7 +39,7 @@ export default function InteractivePortrait() {
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setSize(width, height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25))
     container.appendChild(renderer.domElement)
     rendererRef.current = renderer
 
@@ -294,15 +302,26 @@ export default function InteractivePortrait() {
 
     const clock = new THREE.Clock()
     let t = 0
+    let isVisible = true
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting
+      },
+      { threshold: 0 }
+    )
+    observer.observe(container)
 
     const animate = () => {
+      animationFrameRef.current = requestAnimationFrame(animate)
+      if (!isVisible) return
+
       const dt = clock.getDelta()
       t += dt
       gu.time.value = t
       gu.dTime.value = dt
       blob.render()
       renderer.render(scene, camera)
-      animationFrameRef.current = requestAnimationFrame(animate)
     }
 
     animate()
@@ -342,6 +361,7 @@ export default function InteractivePortrait() {
     window.addEventListener("resize", handleResize)
 
     return () => {
+      observer.disconnect()
       window.removeEventListener("resize", handleResize)
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
       if (rendererRef.current) {
