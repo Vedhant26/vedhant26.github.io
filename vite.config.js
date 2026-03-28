@@ -10,4 +10,15 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  build: {
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          three: ['three'],
+          'framer-motion': ['framer-motion'],
+        },
+      },
+    },
+  },
 })

@@ -1,19 +1,12 @@
 
 
-import { useRef, useState, useEffect } from "react"
+import { useRef } from "react"
 import { motion, useScroll, useTransform, useSpring } from "framer-motion"
 import InteractivePortrait from "./interactive-portrait"
 import SignatureMarqueeSection from "./signature-marquee-section"
 
 export default function HeroSection() {
   const containerRef = useRef(null)
-  const [isReady, setIsReady] = useState(false)
-
-  // Wait for preloader (2.5s + buffer)
-  useEffect(() => {
-    const timer = setTimeout(() => setIsReady(true), 2600)
-    return () => clearTimeout(timer)
-  }, [])
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -67,7 +60,7 @@ export default function HeroSection() {
             opacity: exitOpacity,
           }}
         >
-          {isReady && <InteractivePortrait />}
+          <InteractivePortrait />
         </motion.div>
       </div>
     </section>

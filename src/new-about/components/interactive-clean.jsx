@@ -1,19 +1,15 @@
-
-
 import React from "react"
 import { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
 import Image from "./ui/image"
 
-// --- AQUI É O SEGREDO DA MÁSCARA SVG ---
-// Você tem duas opções:
-// 1. Usar uma imagem da pasta public: `url('/images/minha-forma.svg')`
-// 2. Usar o SVG direto aqui (Data URI) como fiz abaixo.
-
-// Este é um exemplo de uma mancha de tinta/lama vetorial.
-// Se você tiver o SEU código SVG, você pode salvar um arquivo .svg na pasta public
-// e mudar essa linha para: const SVG_MASK = "url('/seu-arquivo.svg')"
 const SVG_MASK = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 250' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='10' y='10' width='180' height='230' rx='20' ry='20' fill='%23000'/%3E%3C/svg%3E")`
+
+// Preload images immediately at module level so they start downloading ASAP
+const dirtyImgPreload = new window.Image()
+dirtyImgPreload.src = "/images/lofan/vbb.jpeg"
+const cleanImgPreload = new window.Image()
+cleanImgPreload.src = "/images/vedhant-about.jpeg"
 
 export function InteractiveClean() {
   const [isHovered, setIsHovered] = useState(false)
@@ -27,23 +23,38 @@ export function InteractiveClean() {
   const lastMousePos = useRef(null)
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
 
-  // Ajuste o tamanho do pincel conforme a sua forma
   const BRUSH_SIZE = 120
   const BRUSH_HARDNESS = 0.2
 
   useEffect(() => {
-    const dirtyImg = document.createElement("img")
-    dirtyImg.src = "/images/lofan/vbb.jpeg"
-    dirtyImg.onload = () => {
+    // Use the preloaded images — they may already be cached
+    const dirtyImg = dirtyImgPreload
+    const cleanImg = cleanImgPreload
+
+    const onDirtyLoad = () => {
       dirtyImageRef.current = dirtyImg
       renderFrame()
     }
-
-    const cleanImg = document.createElement("img")
-    cleanImg.src = "/images/vedhant-about.jpeg"
-    cleanImg.onload = () => {
+    const onCleanLoad = () => {
       cleanImageRef.current = cleanImg
       renderFrame()
+    }
+
+    if (dirtyImg.complete && dirtyImg.naturalWidth > 0) {
+      onDirtyLoad()
+    } else {
+      dirtyImg.addEventListener("load", onDirtyLoad)
+    }
+
+    if (cleanImg.complete && cleanImg.naturalWidth > 0) {
+      onCleanLoad()
+    } else {
+      cleanImg.addEventListener("load", onCleanLoad)
+    }
+
+    return () => {
+      dirtyImg.removeEventListener("load", onDirtyLoad)
+      cleanImg.removeEventListener("load", onCleanLoad)
     }
   }, [])
 
@@ -130,7 +141,7 @@ export function InteractiveClean() {
     ctx.fill()
   }
 
-  const handleMouseMove = () => {
+  const handleMouseMove = (e) => {
     if (!containerRef.current || !maskCanvasRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
     const currentX = e.clientX - rect.left
@@ -162,9 +173,6 @@ export function InteractiveClean() {
   }
 
   return (
-    // Container principal que segura a sombra
-    // Nota: Quando usamos Mask Image, o 'box-shadow' normal é cortado.
-    // Temos que usar 'filter: drop-shadow' para a sombra seguir a forma do SVG.
     <div
       className="relative w-full h-full"
       style={{
@@ -175,18 +183,12 @@ export function InteractiveClean() {
         ref={containerRef}
         className="relative w-full h-full select-none touch-none group cursor-none bg-gray-900"
         style={{
-          // --- AQUI A MÁGICA ACONTECE ---
-          // O WebkitMaskImage é para Chrome/Safari/Edge
-          // O MaskImage é para Firefox/Padrão
           WebkitMaskImage: SVG_MASK,
           maskImage: SVG_MASK,
-
           WebkitMaskSize: "contain",
           maskSize: "contain",
-
           WebkitMaskRepeat: "no-repeat",
           maskRepeat: "no-repeat",
-
           WebkitMaskPosition: "center",
           maskPosition: "center",
         }}
@@ -220,8 +222,3 @@ export function InteractiveClean() {
     </div>
   )
 }
-
-
-
-
-

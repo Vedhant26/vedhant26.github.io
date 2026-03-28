@@ -149,7 +149,7 @@ export default function InteractivePortrait() {
     const blob = new Blob(renderer)
 
     const textureLoader = new THREE.TextureLoader()
-    const baseTexture = textureLoader.load("/images/hero-off.png", (texture) => {
+    const baseTexture = textureLoader.load("/images/hero-off.webp", (texture) => {
       const img = texture.image
       const imgAspect = img.width / img.height
       const containerAspect = width / height
@@ -167,7 +167,7 @@ export default function InteractivePortrait() {
       helmetImage.geometry = new THREE.PlaneGeometry(planeWidth, planeHeight)
     })
 
-    const helmetTexture = textureLoader.load("/images/hero-on.png")
+    const helmetTexture = textureLoader.load("/images/hero-on.webp")
 
     baseTexture.colorSpace = THREE.SRGBColorSpace
     helmetTexture.colorSpace = THREE.SRGBColorSpace
