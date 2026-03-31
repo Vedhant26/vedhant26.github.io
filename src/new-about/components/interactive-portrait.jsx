@@ -5,11 +5,9 @@ import * as THREE from "three"
 
 // Pre-fetch images into Image objects at module level.
 const heroOffImg = new window.Image()
-heroOffImg.crossOrigin = "anonymous"
 heroOffImg.src = "/images/hero-off.webp"
 
 const heroOnImg = new window.Image()
-heroOnImg.crossOrigin = "anonymous"
 heroOnImg.src = "/images/hero-on.webp"
 
 export default function InteractivePortrait() {
@@ -50,13 +48,12 @@ export default function InteractivePortrait() {
     container.appendChild(renderer.domElement)
     rendererRef.current = renderer
 
+    // Use local variables for shaders instead of 'this'
+    let bgShader, helmetShader, rtMaterialShader;
+
     class Blob {
       constructor(renderer) {
         this.renderer = renderer
-        
-        // PING-PONG BUFFER STRATEGY:
-        // Use two render targets instead of copying the framebuffer to a texture.
-        // This is much faster as it stays on the GPU.
         this.renderTargetA = new THREE.WebGLRenderTarget(width, height)
         this.renderTargetB = new THREE.WebGLRenderTarget(width, height)
         this.currentRT = this.renderTargetA
@@ -111,7 +108,7 @@ export default function InteractivePortrait() {
               shader.uniforms.pointerDown = this.uniforms.pointerDown
               shader.uniforms.pointerRadius = this.uniforms.pointerRadius
               shader.uniforms.pointerDuration = this.uniforms.pointerDuration
-              shader.uniforms.prevBuffer = { value: null } // Updated in render()
+              shader.uniforms.prevBuffer = { value: null }
               shader.uniforms.time = gu.time
               shader.fragmentShader = `
                 uniform float dTime, aspect, pointerDown, pointerRadius, pointerDuration, time;
@@ -149,7 +146,7 @@ export default function InteractivePortrait() {
                 diffuseColor.rgb = vec3(rVal);
                 `,
               )
-              this.rtMaterialShader = shader
+              rtMaterialShader = shader
             },
           }),
         )
@@ -158,59 +155,45 @@ export default function InteractivePortrait() {
       }
 
       render() {
-        if (this.rtMaterialShader) {
-          this.rtMaterialShader.uniforms.prevBuffer.value = this.prevRT.texture
+        if (rtMaterialShader) {
+          rtMaterialShader.uniforms.prevBuffer.value = this.prevRT.texture
         }
-        
         this.renderer.setRenderTarget(this.currentRT)
         this.renderer.render(this.rtScene, this.rtCamera)
         this.renderer.setRenderTarget(null)
-        
-        // Swap buffers (ping-pong)
         const temp = this.currentRT
         this.currentRT = this.prevRT
         this.prevRT = temp
       }
 
-      get texture() {
-        return this.prevRT.texture
-      }
+      get texture() { return this.prevRT.texture }
     }
 
     const blob = new Blob(renderer)
 
-    const createTextureFromCachedImage = (preloadedImg, onReady) => {
-      const texture = new THREE.Texture(preloadedImg)
-      texture.colorSpace = THREE.SRGBColorSpace
-      
-      const updateTexture = () => {
-        texture.needsUpdate = true
-        if (onReady) onReady(texture)
-      }
+    const baseImageMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, alphaTest: 0.0 })
+    const baseImage = new THREE.Mesh(new THREE.PlaneGeometry(width, height), baseImageMaterial)
+    scene.add(baseImage)
 
-      if (preloadedImg.complete && preloadedImg.naturalWidth > 0) {
-        updateTexture()
+    const helmetImageMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, alphaTest: 0.0 })
+    const helmetImage = new THREE.Mesh(new THREE.PlaneGeometry(width, height), helmetImageMaterial)
+    scene.add(helmetImage)
+
+    const updateImageGeometry = (img, mesh) => {
+      const imgAspect = img.width / img.height
+      const containerAspect = width / height
+      let pw, ph
+      if (imgAspect > containerAspect) {
+        pw = width; ph = width / imgAspect
       } else {
-        preloadedImg.addEventListener("load", updateTexture, { once: true })
+        ph = height; pw = height * imgAspect
       }
-      return texture
+      mesh.geometry.dispose()
+      mesh.geometry = new THREE.PlaneGeometry(pw, ph)
     }
 
     let texturesLoaded = 0
-    const onTextureReady = (texture, isBase) => {
-      if (isBase && texture.image) {
-        const img = texture.image
-        const imgAspect = img.width / img.height
-        const containerAspect = width / height
-        let planeWidth, planeHeight
-        if (imgAspect > containerAspect) {
-          planeWidth = width; planeHeight = width / imgAspect
-        } else {
-          planeHeight = height; planeWidth = height * imgAspect
-        }
-        baseImage.geometry.dispose(); baseImage.geometry = new THREE.PlaneGeometry(planeWidth, planeHeight)
-        helmetImage.geometry.dispose(); helmetImage.geometry = new THREE.PlaneGeometry(planeWidth, planeHeight)
-      }
+    const onTextureReady = () => {
       texturesLoaded++
       if (texturesLoaded >= 2) {
         blob.render()
@@ -222,17 +205,33 @@ export default function InteractivePortrait() {
       }
     }
 
-    const baseTexture = createTextureFromCachedImage(heroOffImg, (tex) => onTextureReady(tex, true))
-    const helmetTexture = createTextureFromCachedImage(heroOnImg, (tex) => onTextureReady(tex, false))
+    const createTextureFromCachedImage = (preloadedImg, mesh) => {
+      const texture = new THREE.Texture(preloadedImg)
+      texture.colorSpace = THREE.SRGBColorSpace
+      
+      const setupTexture = () => {
+        texture.needsUpdate = true
+        mesh.material.map = texture
+        mesh.material.needsUpdate = true
+        updateImageGeometry(preloadedImg, mesh)
+        onTextureReady()
+      }
 
-    const baseImageMaterial = new THREE.MeshBasicMaterial({ map: baseTexture, transparent: true, alphaTest: 0.0 })
-    const baseImage = new THREE.Mesh(new THREE.PlaneGeometry(width, height), baseImageMaterial)
-    scene.add(baseImage)
+      if (preloadedImg.complete && preloadedImg.naturalWidth > 0) {
+        setupTexture()
+      } else {
+        preloadedImg.addEventListener("load", setupTexture, { once: true })
+      }
+      return texture
+    }
+
+    const baseTexture = createTextureFromCachedImage(heroOffImg, baseImage)
+    const helmetTexture = createTextureFromCachedImage(heroOnImg, helmetImage)
 
     const bgPlaneMaterial = new THREE.MeshBasicMaterial({ color: 0x111111, transparent: true })
     bgPlaneMaterial.defines = { USE_UV: "" }
     bgPlaneMaterial.onBeforeCompile = (shader) => {
-      shader.uniforms.texBlob = { value: null } // Updated in animate loop
+      shader.uniforms.texBlob = { value: null }
       shader.uniforms.time = gu.time
       let vertexShader = shader.vertexShader.replace("void main() {", "varying vec4 vPosProj;\nvoid main() {")
       vertexShader = vertexShader.replace("#include <project_vertex>", "#include <project_vertex>\nvPosProj = gl_Position;")
@@ -259,15 +258,14 @@ export default function InteractivePortrait() {
         diffuseColor.rgb = mix(baseColor, colorLine, lineMix);
         #include <clipping_planes_fragment>
       `)
-      this.bgShader = shader
+      bgShader = shader
     }
 
     const bgPlane = new THREE.Mesh(new THREE.PlaneGeometry(width, height), bgPlaneMaterial)
     scene.add(bgPlane)
 
-    const helmetImageMaterial = new THREE.MeshBasicMaterial({ map: helmetTexture, transparent: true, alphaTest: 0.0 })
-    helmetImageMaterial.onBeforeCompile = (shader) => {
-      shader.uniforms.texBlob = { value: null } // Updated in animate loop
+    const helmetMaterialCompiled = (shader) => {
+      shader.uniforms.texBlob = { value: null }
       let vertexShader = shader.vertexShader.replace("void main() {", "varying vec4 vPosProj;\nvoid main() {")
       vertexShader = vertexShader.replace("#include <project_vertex>", "#include <project_vertex>\nvPosProj = gl_Position;")
       shader.vertexShader = vertexShader
@@ -277,11 +275,10 @@ export default function InteractivePortrait() {
         if(blobData.r<0.02)discard;
         #include <clipping_planes_fragment>
       `)
-      this.helmetShader = shader
+      helmetShader = shader
     }
 
-    const helmetImage = new THREE.Mesh(new THREE.PlaneGeometry(width, height), helmetImageMaterial)
-    scene.add(helmetImage)
+    helmetImageMaterial.onBeforeCompile = helmetMaterialCompiled
 
     baseImage.position.z = 0; bgPlane.position.z = 0.05; helmetImage.position.z = 0.1
 
@@ -300,8 +297,8 @@ export default function InteractivePortrait() {
       gu.time.value = t; gu.dTime.value = dt
       blob.render()
       const currentTexture = blob.texture
-      if (this.bgShader) this.bgShader.uniforms.texBlob.value = currentTexture
-      if (this.helmetShader) this.helmetShader.uniforms.texBlob.value = currentTexture
+      if (bgShader) bgShader.uniforms.texBlob.value = currentTexture
+      if (helmetShader) helmetShader.uniforms.texBlob.value = currentTexture
       renderer.render(scene, camera)
     }
     animate()
@@ -311,10 +308,8 @@ export default function InteractivePortrait() {
       camera.left = nw / -2; camera.right = nw / 2; camera.top = nh / 2; camera.bottom = nh / -2; camera.updateProjectionMatrix()
       renderer.setSize(nw, nh); gu.aspect.value = nw / nh
       if (baseTexture.image) {
-        const img = baseTexture.image; const ia = img.width / img.height; const ca = nw / nh
-        let pw, ph; if (ia > ca) { pw = nw; ph = nw / ia } else { ph = nh; pw = nh * ia }
-        baseImage.geometry.dispose(); baseImage.geometry = new THREE.PlaneGeometry(pw, ph)
-        helmetImage.geometry.dispose(); helmetImage.geometry = new THREE.PlaneGeometry(pw, ph)
+        updateImageGeometry(baseTexture.image, baseImage)
+        updateImageGeometry(helmetTexture.image, helmetImage)
         bgPlane.geometry.dispose(); bgPlane.geometry = new THREE.PlaneGeometry(nw, nh)
       }
     }
@@ -323,7 +318,12 @@ export default function InteractivePortrait() {
     return () => {
       observer.disconnect(); if (blob._cleanup) blob._cleanup(); window.removeEventListener("resize", handleResize)
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
-      if (rendererRef.current) { container.removeChild(rendererRef.current.domElement); rendererRef.current.dispose() }
+      if (rendererRef.current) { 
+        if (container.contains(rendererRef.current.domElement)) {
+          container.removeChild(rendererRef.current.domElement)
+        }
+        rendererRef.current.dispose() 
+      }
       scene.traverse((o) => { if (o instanceof THREE.Mesh) { o.geometry.dispose(); if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.dispose()) } })
       baseTexture.dispose(); helmetTexture.dispose()
     }
