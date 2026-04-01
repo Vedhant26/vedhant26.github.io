@@ -1,58 +1,54 @@
-// interactive-portrait.jsx — Lando Norris style portrait effect
-// Ported from reference: new integrate/components/interactive-portrait.tsx
-// Background: hero-off.png (always visible)
-// Middle: animated white topographic mesh (revealed on mouse hover via blob)
-// Top: hero-on.png (revealed on mouse hover via blob)
+// interactive-portrait.tsx
 
-import { useEffect, useRef, useState } from "react"
+"use client"
+
+import { useEffect, useRef } from "react"
 import * as THREE from "three"
 
 export default function InteractivePortrait() {
-  const containerRef = useRef(null)
-  const rendererRef = useRef(null)
-  const animationFrameRef = useRef()
-  const [webglReady, setWebglReady] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
+  const animationFrameRef = useRef<number>()
 
   useEffect(() => {
     if (!containerRef.current) return
 
-    let isMounted = true
     const container = containerRef.current
-    const width = container.clientWidth || window.innerWidth
-    const height = container.clientHeight || window.innerHeight
+    const width = container.clientWidth
+    const height = container.clientHeight
 
-    // === Global uniforms ===
     const gu = {
       time: { value: 0 },
       dTime: { value: 0 },
       aspect: { value: width / height },
     }
 
-    // === Scene & Renderer ===
     const scene = new THREE.Scene()
     scene.background = new THREE.Color(0xffffff)
 
-    const camera = new THREE.OrthographicCamera(
-      width / -2, width / 2,
-      height / 2, height / -2,
-      0.1, 1000
-    )
+    const camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 0.1, 1000)
     camera.position.z = 1
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setSize(width, height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    renderer.domElement.style.position = "absolute"
-    renderer.domElement.style.inset = "0"
-    renderer.domElement.style.zIndex = "5"
-    renderer.domElement.style.opacity = "0"
-    renderer.domElement.style.transition = "opacity 0.8s ease-out"
     container.appendChild(renderer.domElement)
     rendererRef.current = renderer
 
-    // === Blob Class (Mouse trail with FramebufferTexture) ===
     class Blob {
-      constructor(renderer) {
+      renderer: THREE.WebGLRenderer
+      fbTexture: { value: THREE.FramebufferTexture }
+      rtOutput: THREE.WebGLRenderTarget
+      uniforms: {
+        pointer: { value: THREE.Vector2 }
+        pointerDown: { value: number }
+        pointerRadius: { value: number }
+        pointerDuration: { value: number }
+      }
+      rtScene: THREE.Mesh
+      rtCamera: THREE.Camera
+
+      constructor(renderer: THREE.WebGLRenderer) {
         this.renderer = renderer
         this.fbTexture = { value: new THREE.FramebufferTexture(width, height) }
         this.rtOutput = new THREE.WebGLRenderTarget(width, height)
@@ -63,7 +59,7 @@ export default function InteractivePortrait() {
           pointerDuration: { value: 2.5 },
         }
 
-        const handleMouseMove = (event) => {
+        const handleMouseMove = (event: MouseEvent) => {
           const rect = container.getBoundingClientRect()
           this.uniforms.pointer.value.x = ((event.clientX - rect.left) / width) * 2 - 1
           this.uniforms.pointer.value.y = -((event.clientY - rect.top) / height) * 2 + 1
@@ -75,10 +71,6 @@ export default function InteractivePortrait() {
 
         container.addEventListener("mousemove", handleMouseMove)
         container.addEventListener("mouseleave", handleMouseLeave)
-
-        // Store for cleanup
-        this._handleMouseMove = handleMouseMove
-        this._handleMouseLeave = handleMouseLeave
 
         this.rtScene = new THREE.Mesh(
           new THREE.PlaneGeometry(2, 2),
@@ -142,22 +134,12 @@ export default function InteractivePortrait() {
         this.renderer.copyFramebufferToTexture(this.fbTexture.value)
         this.renderer.setRenderTarget(null)
       }
-
-      dispose() {
-        container.removeEventListener("mousemove", this._handleMouseMove)
-        container.removeEventListener("mouseleave", this._handleMouseLeave)
-        this.rtOutput.dispose()
-        this.rtScene.geometry.dispose()
-        this.rtScene.material.dispose()
-      }
     }
 
     const blob = new Blob(renderer)
 
-    // === Load textures ===
     const textureLoader = new THREE.TextureLoader()
     const baseTexture = textureLoader.load("/images/hero-off.png", (texture) => {
-      if (!isMounted) return
       const img = texture.image
       const imgAspect = img.width / img.height
       const containerAspect = width / height
@@ -173,12 +155,6 @@ export default function InteractivePortrait() {
       baseImage.geometry = new THREE.PlaneGeometry(planeWidth, planeHeight)
       helmetImage.geometry.dispose()
       helmetImage.geometry = new THREE.PlaneGeometry(planeWidth, planeHeight)
-
-      // Show WebGL canvas once textures are ready
-      if (isMounted) {
-        setWebglReady(true)
-        renderer.domElement.style.opacity = "1"
-      }
     })
 
     const helmetTexture = textureLoader.load("/images/hero-on.png")
@@ -186,23 +162,11 @@ export default function InteractivePortrait() {
     baseTexture.colorSpace = THREE.SRGBColorSpace
     helmetTexture.colorSpace = THREE.SRGBColorSpace
 
-    // === LAYER 1: Base Image (hero-off) — always visible ===
-    const baseImageMaterial = new THREE.MeshBasicMaterial({
-      map: baseTexture,
-      transparent: true,
-      alphaTest: 0.0,
-    })
-    const baseImage = new THREE.Mesh(
-      new THREE.PlaneGeometry(width, height),
-      baseImageMaterial
-    )
+    const baseImageMaterial = new THREE.MeshBasicMaterial({ map: baseTexture, transparent: true, alphaTest: 0.0 })
+    const baseImage = new THREE.Mesh(new THREE.PlaneGeometry(width, height), baseImageMaterial)
     scene.add(baseImage)
 
-    // === LAYER 2: White Topographic Mesh — revealed where blob is active ===
-    const bgPlaneMaterial = new THREE.MeshBasicMaterial({
-      color: 0x1a1f1a,
-      transparent: true,
-    })
+    const bgPlaneMaterial = new THREE.MeshBasicMaterial({ color: 0x1a1f1a, transparent: true })
     bgPlaneMaterial.defines = { USE_UV: "" }
 
     bgPlaneMaterial.onBeforeCompile = (shader) => {
@@ -210,13 +174,10 @@ export default function InteractivePortrait() {
       shader.uniforms.time = gu.time
 
       let vertexShader = shader.vertexShader
-      vertexShader = vertexShader.replace(
-        "void main() {",
-        "varying vec4 vPosProj;\nvoid main() {"
-      )
+      vertexShader = vertexShader.replace("void main() {", "varying vec4 vPosProj;\nvoid main() {")
       vertexShader = vertexShader.replace(
         "#include <project_vertex>",
-        "#include <project_vertex>\nvPosProj = gl_Position;"
+        "#include <project_vertex>\nvPosProj = gl_Position;",
       )
       shader.vertexShader = vertexShader
 
@@ -225,9 +186,11 @@ export default function InteractivePortrait() {
         uniform float time; 
         varying vec4 vPosProj;
 
+        // Função de ruído simples
         float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
         float noise(vec2 p){vec2 i=floor(p);vec2 f=fract(p);f=f*f*(3.-2.*f);float a=hash(i);float b=hash(i+vec2(1.,0.));float c=hash(i+vec2(0.,1.));float d=hash(i+vec2(1.,1.));return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}
         
+        // Função de ruído orgânico (fBm)
         float fbm(vec2 p) {
             float value = 0.0;
             float amplitude = 0.5;
@@ -243,22 +206,35 @@ export default function InteractivePortrait() {
       `.replace(
         `#include <clipping_planes_fragment>`,
         `
+        // A lógica da máscara continua a mesma
         vec2 blobUV=((vPosProj.xy/vPosProj.w)+1.)*0.5;
-        vec4 blobData=texture2D(texBlob,blobUV);
+        vec4 blobData=texture(texBlob,blobUV);
         if(blobData.r<0.02)discard;
 
-        // Domain warping liquid animation
+        // <<< LÓGICA ATUALIZADA PARA ANIMAÇÃO LÍQUIDA (DOMAIN WARPING) >>>
+
+        // 1. Define as cores
         vec3 colorBg = vec3(1.0);
         vec3 colorSoftShape = vec3(0.92);
         vec3 colorLine = vec3(0.8);
 
+        // 2. Coordenada base da textura (controla o "zoom")
         vec2 uv = vUv * 3.5;
+
+        // 3. Cria um "campo de distorção" que muda com o tempo
+        // Este é o nosso "líquido invisível" que vai mover a textura
         vec2 distortionField = vUv * 2.0;
-        float distortion = fbm(distortionField + time * 0.2);
-        float distortionStrength = 0.7;
+        float distortion = fbm(distortionField + time * 0.2); // O campo de distorção se move lentamente
+
+        // 4. Aplica a distorção (warp) às coordenadas da textura principal
+        // Usamos o 'distortion' para empurrar as coordenadas 'uv'
+        float distortionStrength = 0.7; // <-- CONTROLE A INTENSIDADE AQUI
         vec2 warpedUv = uv + (distortion - 0.5) * distortionStrength;
+        
+        // 5. Gera o valor final do ruído a partir das coordenadas distorcidas
         float n = fbm(warpedUv);
 
+        // O resto da lógica para desenhar as formas e linhas permanece o mesmo
         float softShapeMix = smoothstep(0.1, 0.9, sin(n * 3.0));
         vec3 baseColor = mix(colorBg, colorSoftShape, softShapeMix);
         float linePattern = fract(n * 15.0);
@@ -271,29 +247,18 @@ export default function InteractivePortrait() {
       )
     }
 
-    const bgPlane = new THREE.Mesh(
-      new THREE.PlaneGeometry(width, height),
-      bgPlaneMaterial
-    )
+    const bgPlane = new THREE.Mesh(new THREE.PlaneGeometry(width, height), bgPlaneMaterial)
     scene.add(bgPlane)
 
-    // === LAYER 3: Helmet Image (hero-on) — revealed where blob is active ===
-    const helmetImageMaterial = new THREE.MeshBasicMaterial({
-      map: helmetTexture,
-      transparent: true,
-      alphaTest: 0.0,
-    })
+    const helmetImageMaterial = new THREE.MeshBasicMaterial({ map: helmetTexture, transparent: true, alphaTest: 0.0 })
 
     helmetImageMaterial.onBeforeCompile = (shader) => {
       shader.uniforms.texBlob = { value: blob.rtOutput.texture }
       let vertexShader = shader.vertexShader
-      vertexShader = vertexShader.replace(
-        "void main() {",
-        "varying vec4 vPosProj;\nvoid main() {"
-      )
+      vertexShader = vertexShader.replace("void main() {", "varying vec4 vPosProj;\nvoid main() {")
       vertexShader = vertexShader.replace(
         "#include <project_vertex>",
-        "#include <project_vertex>\nvPosProj = gl_Position;"
+        "#include <project_vertex>\nvPosProj = gl_Position;",
       )
       shader.vertexShader = vertexShader
       shader.fragmentShader = `
@@ -303,25 +268,20 @@ export default function InteractivePortrait() {
         `#include <clipping_planes_fragment>`,
         `
         vec2 blobUV=((vPosProj.xy/vPosProj.w)+1.)*0.5;
-        vec4 blobData=texture2D(texBlob,blobUV);
+        vec4 blobData=texture(texBlob,blobUV);
         if(blobData.r<0.02)discard;
         #include <clipping_planes_fragment>
         `,
       )
     }
 
-    const helmetImage = new THREE.Mesh(
-      new THREE.PlaneGeometry(width, height),
-      helmetImageMaterial
-    )
+    const helmetImage = new THREE.Mesh(new THREE.PlaneGeometry(width, height), helmetImageMaterial)
     scene.add(helmetImage)
 
-    // === Z-ordering: base behind, mesh in middle, helmet on top ===
     baseImage.position.z = 0.0
     bgPlane.position.z = 0.05
     helmetImage.position.z = 0.1
 
-    // === Animation Loop ===
     const clock = new THREE.Clock()
     let t = 0
 
@@ -337,7 +297,6 @@ export default function InteractivePortrait() {
 
     animate()
 
-    // === Resize Handler ===
     const handleResize = () => {
       const newWidth = container.clientWidth
       const newHeight = container.clientHeight
@@ -372,16 +331,13 @@ export default function InteractivePortrait() {
 
     window.addEventListener("resize", handleResize)
 
-    // === Cleanup ===
     return () => {
-      isMounted = false
       window.removeEventListener("resize", handleResize)
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
-      if (rendererRef.current && container.contains(rendererRef.current.domElement)) {
+      if (rendererRef.current) {
         container.removeChild(rendererRef.current.domElement)
+        rendererRef.current.dispose()
       }
-      blob.dispose()
-      renderer.dispose()
       scene.traverse((object) => {
         if (object instanceof THREE.Mesh) {
           object.geometry.dispose()
@@ -396,35 +352,21 @@ export default function InteractivePortrait() {
       })
       baseTexture.dispose()
       helmetTexture.dispose()
+      blob.rtOutput.dispose()
     }
   }, [])
 
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full overflow-hidden"
-      style={{
-        minHeight: "100vh",
-        background: "#ffffff",
-        cursor: "crosshair",
-        touchAction: "none",
-      }}
+      className="fixed inset-0 w-full h-full bg-[#1a1f1a] cursor-crosshair overflow-hidden"
+      style={{ touchAction: "none" }}
     >
-      {/* Fallback while WebGL loads */}
       <img
-        src="/images/hero-off.png"
-        alt="Portrait"
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "contain",
-          zIndex: 1,
-          opacity: webglReady ? 0 : 1,
-          transition: "opacity 0.5s ease-out",
-          background: "#ffffff",
-        }}
+        src="/images/inspired-by-lando-norris.png"
+        alt="Inspired by Lorenzo"
+        className="absolute bottom-4 left-4 z-10 pointer-events-none"
+        style={{ maxWidth: "120px", width: "120px", height: "auto" }}
       />
     </div>
   )
