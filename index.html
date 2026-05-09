@@ -2,9 +2,21 @@
 <html lang="en">
 
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0Z9D0Q7LHW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-0Z9D0Q7LHW');
+  </script>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-  <link rel="apple-touch-icon" href="/apple-icon.png" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vedhant Bidari | Creative Technologist & Web Developer</title>
   <meta name="description"
@@ -15,12 +27,13 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Outfit:wght@400;700&display=swap"
     rel="stylesheet">
-  <!-- Preload images for faster hover effect in About section -->
-  <link rel="preload" href="/images/lofan/vbb.jpeg" as="image" />
-  <link rel="preload" href="/images/vedhant-about.jpeg" as="image" />
-  <link rel="preload" href="/images/panov0.png" as="image" />
-  <script type="module" crossorigin src="/assets/index-5MJCKVIy.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BaIeCJlg.css">
+  <!-- Preload hero images with high priority for instant About section loading -->
+  <link rel="preload" href="/images/hero-off.webp" as="image" type="image/webp" fetchpriority="high" />
+  <link rel="preload" href="/images/hero-on.webp" as="image" type="image/webp" fetchpriority="high" />
+  <script type="module" crossorigin src="/assets/index-DZz_sEDK.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/framer-motion-GfvGPEjj.js">
+  <link rel="modulepreload" crossorigin href="/assets/three-OUCpVYoB.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-BtxtBIe3.css">
 </head>
 
 <body>
