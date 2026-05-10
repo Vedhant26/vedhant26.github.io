@@ -1,0 +1,764 @@
+/* ═══════════════════════════════════════════════════════════════
+   DUAL-REALITY DESIGN SYSTEM
+   Miles Morales Spider-Verse × 90's Nintendo Retro-Verse
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── GOOGLE FONTS ─── */
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Press+Start+2P&family=Permanent+Marker&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ─── MILES MORALES REALITY ─── */
+[data-reality="miles"] {
+  --r-bg-primary: #0d0221;
+  --r-bg-secondary: #1a0a2e;
+  --r-bg-tertiary: #0f0f1a;
+  --r-bg-card: rgba(26, 10, 46, 0.8);
+  --r-accent-1: #ff2d95;
+  --r-accent-2: #00d4ff;
+  --r-accent-3: #ffee00;
+  --r-accent-4: #bf5af2;
+  --r-text-primary: #f0e6ff;
+  --r-text-secondary: #a78bca;
+  --r-text-muted: #6b5b8a;
+  --r-border: rgba(255, 45, 149, 0.2);
+  --r-border-hover: rgba(255, 45, 149, 0.5);
+  --r-glow-1: rgba(255, 45, 149, 0.4);
+  --r-glow-2: rgba(0, 212, 255, 0.4);
+  --r-glow-3: rgba(255, 238, 0, 0.3);
+  --r-font-display: 'Bangers', cursive;
+  --r-font-accent: 'Permanent Marker', cursive;
+  --r-font-body: 'Inter', system-ui, sans-serif;
+  --r-panel-border: 3px solid #111;
+  --r-radius: 4px;
+  --r-halftone-size: 3px;
+  --r-scanline-opacity: 0.05;
+  --r-transition-speed: 0.3s;
+}
+
+/* ─── RETRO NINTENDO REALITY ─── */
+[data-reality="retro"] {
+  --r-bg-primary: #1a1a2e;
+  --r-bg-secondary: #16213e;
+  --r-bg-tertiary: #0f3460;
+  --r-bg-card: rgba(22, 33, 62, 0.9);
+  --r-accent-1: #e94560;
+  --r-accent-2: #ffd700;
+  --r-accent-3: #00b4d8;
+  --r-accent-4: #43aa8b;
+  --r-text-primary: #e8e8e8;
+  --r-text-secondary: #b0b0b0;
+  --r-text-muted: #707070;
+  --r-border: rgba(255, 215, 0, 0.25);
+  --r-border-hover: rgba(255, 215, 0, 0.6);
+  --r-glow-1: rgba(233, 69, 96, 0.5);
+  --r-glow-2: rgba(255, 215, 0, 0.5);
+  --r-glow-3: rgba(0, 180, 216, 0.4);
+  --r-font-display: 'Press Start 2P', monospace;
+  --r-font-accent: 'Press Start 2P', monospace;
+  --r-font-body: 'Press Start 2P', monospace;
+  --r-panel-border: 4px solid #ffd700;
+  --r-radius: 0px;
+  --r-pixel-size: 4px;
+  --r-scanline-opacity: 0.08;
+  --r-transition-speed: 0s;
+}
+
+/* ─── REALITY ROOT ─── */
+.about-reality-root {
+  position: relative;
+  min-height: 100vh;
+  background: var(--r-bg-primary);
+  color: var(--r-text-primary);
+  font-family: var(--r-font-body);
+  overflow-x: hidden;
+  transition: background 0s;
+}
+
+/* ═══════════════════════════════════════════
+   MILES MODE — VISUAL EFFECTS
+   ═══════════════════════════════════════════ */
+
+/* Halftone dot pattern overlay */
+[data-reality="miles"] .miles-halftone-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.04;
+  background-image: radial-gradient(circle, var(--r-accent-2) 1px, transparent 1px);
+  background-size: var(--r-halftone-size) var(--r-halftone-size);
+}
+
+/* Scanline overlay */
+[data-reality="miles"] .miles-scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: var(--r-scanline-opacity);
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.3) 2px,
+    rgba(0, 0, 0, 0.3) 4px
+  );
+}
+
+/* Glitch keyframes */
+@keyframes milesGlitch {
+  0%, 100% { transform: translate(0); filter: none; }
+  20% { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
+  40% { transform: translate(2px, -1px); filter: hue-rotate(-90deg); }
+  60% { transform: translate(-1px, -2px); }
+  80% { transform: translate(1px, 2px); filter: hue-rotate(45deg); }
+}
+
+@keyframes milesGlitchText {
+  0%, 90%, 100% { 
+    text-shadow: none;
+    transform: none;
+  }
+  91% { 
+    text-shadow: -2px 0 var(--r-accent-2), 2px 0 var(--r-accent-1);
+    transform: skewX(-2deg);
+  }
+  93% { 
+    text-shadow: 2px 0 var(--r-accent-1), -2px 0 var(--r-accent-2);
+    transform: skewX(1deg);
+  }
+  95% { 
+    text-shadow: -1px 0 var(--r-accent-3), 1px 0 var(--r-accent-4);
+    transform: skewX(-0.5deg);
+  }
+}
+
+@keyframes milesNeonPulse {
+  0%, 100% { 
+    text-shadow: 
+      0 0 7px var(--r-accent-1),
+      0 0 10px var(--r-accent-1),
+      0 0 21px var(--r-accent-1),
+      0 0 42px var(--r-accent-1);
+  }
+  50% { 
+    text-shadow: 
+      0 0 4px var(--r-accent-1),
+      0 0 7px var(--r-accent-1),
+      0 0 15px var(--r-accent-1);
+  }
+}
+
+@keyframes chromatic {
+  0%, 100% { filter: none; }
+  25% { filter: drop-shadow(-2px 0 0 rgba(255, 0, 100, 0.5)) drop-shadow(2px 0 0 rgba(0, 200, 255, 0.5)); }
+  50% { filter: none; }
+  75% { filter: drop-shadow(1px 0 0 rgba(255, 0, 100, 0.3)) drop-shadow(-1px 0 0 rgba(0, 200, 255, 0.3)); }
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(100%) scale(0.8); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+}
+
+/* Comic panel styling */
+[data-reality="miles"] .comic-panel {
+  border: var(--r-panel-border);
+  position: relative;
+  overflow: hidden;
+  background: var(--r-bg-secondary);
+}
+
+[data-reality="miles"] .comic-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.15) 1px, transparent 1px);
+  background-size: 4px 4px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Spray paint text effect */
+[data-reality="miles"] .spray-text {
+  font-family: var(--r-font-accent);
+  color: var(--r-accent-1);
+  text-shadow: 
+    0 0 10px var(--r-glow-1),
+    0 0 20px var(--r-glow-1),
+    0 0 40px var(--r-glow-1);
+  animation: milesGlitchText 4s ease-in-out infinite;
+}
+
+/* Neon glow effect for links/buttons */
+[data-reality="miles"] .neon-element {
+  border: 2px solid var(--r-accent-1);
+  box-shadow: 
+    0 0 5px var(--r-glow-1),
+    inset 0 0 5px var(--r-glow-1);
+  transition: all 0.3s ease;
+}
+
+[data-reality="miles"] .neon-element:hover {
+  box-shadow: 
+    0 0 10px var(--r-glow-1),
+    0 0 20px var(--r-glow-1),
+    0 0 40px var(--r-glow-1),
+    inset 0 0 10px var(--r-glow-1);
+}
+
+/* Diagonal slash accents */
+[data-reality="miles"] .slash-accent::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -5%;
+  width: 120%;
+  height: 140%;
+  background: linear-gradient(
+    -45deg,
+    transparent 30%,
+    rgba(255, 45, 149, 0.05) 30%,
+    rgba(255, 45, 149, 0.05) 32%,
+    transparent 32%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Speech bubble */
+[data-reality="miles"] .speech-bubble {
+  position: relative;
+  background: #fff;
+  color: #111;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  font-family: var(--r-font-display);
+  font-size: 0.85rem;
+  border: 2px solid #111;
+}
+
+[data-reality="miles"] .speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 20px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #111;
+}
+
+/* Duotone image filter */
+[data-reality="miles"] .duotone-image {
+  filter: grayscale(100%) contrast(1.2) brightness(1.1);
+  mix-blend-mode: multiply;
+  position: relative;
+}
+
+[data-reality="miles"] .duotone-image-wrap {
+  position: relative;
+  background: linear-gradient(135deg, var(--r-accent-1), var(--r-accent-4));
+}
+
+[data-reality="miles"] .duotone-image-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 45, 149, 0.3), rgba(0, 212, 255, 0.2));
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* Holographic foil effect */
+@keyframes holoShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+[data-reality="miles"] .holo-card:hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 45, 149, 0.1) 0%,
+    rgba(0, 212, 255, 0.2) 25%,
+    rgba(255, 238, 0, 0.1) 50%,
+    rgba(191, 90, 242, 0.2) 75%,
+    rgba(255, 45, 149, 0.1) 100%
+  );
+  background-size: 200% 200%;
+  animation: holoShift 3s ease infinite;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════
+   RETRO MODE — VISUAL EFFECTS
+   ═══════════════════════════════════════════ */
+
+/* CRT screen curvature */
+[data-reality="retro"] .retro-crt-wrap {
+  position: relative;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+[data-reality="retro"] .retro-crt-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    rgba(0, 0, 0, 0.15) 1px,
+    rgba(0, 0, 0, 0.15) 2px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+[data-reality="retro"] .retro-crt-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  pointer-events: none;
+  z-index: 11;
+}
+
+/* Pixel art rendering */
+[data-reality="retro"] .pixel-render {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Retro scanlines (global) */
+[data-reality="retro"] .retro-scanlines-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.12) 2px,
+    rgba(0, 0, 0, 0.12) 4px
+  );
+  opacity: 0.6;
+}
+
+/* Phosphor glow */
+[data-reality="retro"] .phosphor-glow {
+  box-shadow: 
+    0 0 20px rgba(0, 180, 216, 0.15),
+    inset 0 0 30px rgba(0, 180, 216, 0.05);
+}
+
+/* Pixel border frames */
+[data-reality="retro"] .pixel-border {
+  border: 4px solid var(--r-accent-2);
+  box-shadow:
+    4px 4px 0 0 rgba(0, 0, 0, 0.5),
+    -2px -2px 0 0 rgba(255, 255, 255, 0.1);
+  image-rendering: pixelated;
+}
+
+/* RPG dialog box */
+[data-reality="retro"] .rpg-dialog {
+  background: var(--r-bg-secondary);
+  border: 4px solid var(--r-accent-2);
+  box-shadow: 
+    6px 6px 0 0 rgba(0, 0, 0, 0.6),
+    inset 0 0 0 2px rgba(255, 215, 0, 0.1);
+  padding: 1.5rem;
+  position: relative;
+}
+
+[data-reality="retro"] .rpg-dialog::before {
+  content: '';
+  position: absolute;
+  top: 4px; left: 4px; right: 4px; bottom: 4px;
+  border: 2px solid rgba(255, 215, 0, 0.15);
+  pointer-events: none;
+}
+
+/* Retro blink animation */
+@keyframes retroBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes retroBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes retroSlideIn {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes coinSpin {
+  0% { transform: scaleX(1); }
+  25% { transform: scaleX(0.3); }
+  50% { transform: scaleX(1); }
+  75% { transform: scaleX(0.3); }
+  100% { transform: scaleX(1); }
+}
+
+@keyframes starPop {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1.3) rotate(180deg); opacity: 1; }
+  100% { transform: scale(1) rotate(360deg); opacity: 1; }
+}
+
+/* Pixel progress bar */
+[data-reality="retro"] .pixel-progress {
+  height: 16px;
+  background: #0f0f0f;
+  border: 2px solid var(--r-text-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-reality="retro"] .pixel-progress-fill {
+  height: 100%;
+  background: var(--r-accent-1);
+  transition: width 0.5s steps(10);
+  image-rendering: pixelated;
+}
+
+/* HUD element styling */
+[data-reality="retro"] .hud-element {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--r-accent-2);
+}
+
+/* Score counter animation */
+@keyframes scoreUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-20px); opacity: 0; }
+}
+
+/* Question block */
+[data-reality="retro"] .question-block {
+  width: 48px;
+  height: 48px;
+  background: var(--r-accent-2);
+  border: 3px solid #8B6914;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.2rem;
+  color: #8B6914;
+  box-shadow: 
+    inset -3px -3px 0 rgba(0,0,0,0.3),
+    inset 3px 3px 0 rgba(255,255,255,0.3);
+  animation: retroBounce 2s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════
+   DIMENSION SWITCH BUTTON
+   ═══════════════════════════════════════════ */
+
+.dimension-switch {
+  position: fixed;
+  top: 100px;
+  right: 24px;
+  z-index: 1000;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+}
+
+.dimension-switch:focus-visible {
+  outline: 3px solid var(--r-accent-2);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* Miles mode button */
+[data-reality="miles"] .switch-miles {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(13, 2, 33, 0.85);
+  backdrop-filter: blur(12px);
+  border: 2px solid var(--r-accent-1);
+  border-radius: 6px;
+  color: var(--r-accent-1);
+  font-family: var(--r-font-display);
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  box-shadow: 
+    0 0 10px var(--r-glow-1),
+    inset 0 0 10px rgba(255, 45, 149, 0.1);
+  animation: chromatic 5s ease infinite;
+  transition: all 0.3s ease;
+}
+
+[data-reality="miles"] .switch-miles:hover {
+  box-shadow: 
+    0 0 20px var(--r-glow-1),
+    0 0 40px var(--r-glow-1),
+    inset 0 0 20px rgba(255, 45, 149, 0.2);
+  transform: scale(1.05);
+}
+
+/* Retro mode button */
+[data-reality="retro"] .switch-retro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: var(--r-accent-2);
+  border: 4px solid #8B6914;
+  color: #8B6914;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.5rem;
+  font-weight: bold;
+  box-shadow: 
+    inset -4px -4px 0 rgba(0,0,0,0.3),
+    inset 4px 4px 0 rgba(255,255,255,0.3),
+    4px 4px 0 rgba(0,0,0,0.5);
+  animation: retroBounce 1.5s ease-in-out infinite;
+  transition: transform 0.1s;
+  image-rendering: pixelated;
+}
+
+[data-reality="retro"] .switch-retro:hover {
+  animation: none;
+  transform: translateY(-3px);
+}
+
+[data-reality="retro"] .switch-retro:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 4px 4px 0 rgba(0,0,0,0.3),
+    inset -4px -4px 0 rgba(255,255,255,0.3),
+    2px 2px 0 rgba(0,0,0,0.5);
+}
+
+/* ═══════════════════════════════════════════
+   GLITCH TRANSITION OVERLAY
+   ═══════════════════════════════════════════ */
+
+.glitch-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+.glitch-transition-overlay canvas {
+  width: 100vw !important;
+  height: 100vh !important;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Reduced motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  .glitch-transition-overlay {
+    display: none;
+  }
+
+  .about-reality-root {
+    transition: background 0.5s ease, color 0.5s ease;
+  }
+
+  [data-reality] * {
+    animation-duration: 0.01s !important;
+    transition-duration: 0.3s !important;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SHARED SECTION STYLES
+   ═══════════════════════════════════════════ */
+
+.about-section {
+  position: relative;
+  padding: clamp(3rem, 6vw, 6rem) 1.5rem;
+  z-index: 2;
+}
+
+.about-section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-section-title {
+  font-family: var(--r-font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  color: var(--r-text-primary);
+  position: relative;
+}
+
+[data-reality="miles"] .about-section-title {
+  letter-spacing: 3px;
+}
+
+[data-reality="retro"] .about-section-title {
+  font-size: clamp(0.9rem, 2.5vw, 1.4rem);
+  letter-spacing: 2px;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════
+   ONOMATOPOEIA EFFECTS (Miles)
+   ═══════════════════════════════════════════ */
+
+.onomatopoeia {
+  position: absolute;
+  font-family: 'Bangers', cursive;
+  font-size: clamp(2rem, 5vw, 4rem);
+  pointer-events: none;
+  z-index: 50;
+  color: var(--r-accent-3);
+  text-shadow: 
+    3px 3px 0 #111,
+    -1px -1px 0 #111,
+    1px -1px 0 #111,
+    -1px 1px 0 #111;
+  transform: rotate(-12deg);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.onomatopoeia.visible {
+  opacity: 1;
+  animation: floatUp 1.5s ease-out forwards;
+}
+
+/* ═══════════════════════════════════════════
+   KONAMI CODE EASTER EGG
+   ═══════════════════════════════════════════ */
+
+.konami-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  animation: konamiFlash 0.5s ease;
+}
+
+@keyframes konamiFlash {
+  0% { opacity: 0; }
+  50% { opacity: 1; background: #fff; }
+  100% { opacity: 1; background: #000; }
+}
+
+.konami-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(1rem, 3vw, 2rem);
+  color: #ffd700;
+  text-align: center;
+  animation: retroBlink 1s step-start infinite;
+}
+
+.konami-sub {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(0.5rem, 1.5vw, 0.8rem);
+  color: #aaa;
+  text-align: center;
+  line-height: 2;
+}
+
+.konami-dismiss {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
+  color: #666;
+  background: none;
+  border: 2px solid #666;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  margin-top: 2rem;
+  transition: all 0.2s;
+}
+
+.konami-dismiss:hover {
+  color: #ffd700;
+  border-color: #ffd700;
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE ADJUSTMENTS
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .dimension-switch {
+    top: 80px;
+    right: 12px;
+  }
+
+  [data-reality="miles"] .switch-miles {
+    padding: 8px 14px;
+    font-size: 0.7rem;
+  }
+
+  [data-reality="retro"] .switch-retro {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+
+  .about-section {
+    padding: clamp(2rem, 4vw, 4rem) 1rem;
+  }
+
+  [data-reality="retro"] .about-section-title {
+    font-size: clamp(0.7rem, 2vw, 1rem);
+  }
+}
+
+@media (max-width: 480px) {
+  [data-reality="miles"] .switch-miles span {
+    display: none;
+  }
+}
+
+/* ─── Utility: screen-reader only ─── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -72,10 +72,10 @@
   padding: 0;
 }
 
-/* Hide default cursor only on desktop with hover capability */
+/* Windows XP arrow cursor — slightly enlarged */
 @media (hover: hover) and (pointer: fine) {
   * {
-    cursor: none;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M4 2 L4 28 L10 22 L16 30 L20 28 L14 20 L22 20 Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, auto;
   }
 }
 
@@ -409,7 +409,7 @@ textarea.input-base {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
-  cursor: none;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M4 2 L4 28 L10 22 L16 30 L20 28 L14 20 L22 20 Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, pointer;
 }
 
 /* Footer */
@@ -787,8 +787,8 @@ textarea.input-base {
   font-family: monospace;
   font-weight: 600;
   color: #ccc;
-  cursor: none;
-  /* Custom cursor */
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M4 2 L4 28 L10 22 L16 30 L20 28 L14 20 L22 20 Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, pointer;
+  /* Windows XP cursor */
   transition: all 0.2s ease;
 }
 
@@ -898,7 +898,7 @@ textarea.terminal-input-base {
   font-family: monospace;
   font-weight: 800;
   font-size: 1.1rem;
-  cursor: none;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M4 2 L4 28 L10 22 L16 30 L20 28 L14 20 L22 20 Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, pointer;
   margin-top: 1rem;
 }
 
@@ -917,7 +917,7 @@ textarea.terminal-input-base {
   color: #666;
   margin-top: 2rem;
   padding: 0.5rem 1rem;
-  cursor: none;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M4 2 L4 28 L10 22 L16 30 L20 28 L14 20 L22 20 Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, pointer;
 }
 
 .reset-btn:hover {
