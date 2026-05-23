@@ -155,10 +155,30 @@ img {
   width: 100%;
   height: 600px;
   /* Increased height for vertical portrait */
-  background: #111;
+  background: #000;
   border: 1px solid #333;
   position: relative;
   overflow: hidden;
+}
+
+.about-bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.4;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.about-profile-img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .about-placeholder {
@@ -1001,7 +1021,14 @@ textarea.terminal-input-base {
 
   /* About */
   .about-image {
-    height: 350px;
+    height: 450px;
+    aspect-ratio: 9 / 16;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .about-bg-video {
+    object-fit: cover;
   }
 
   .my-name {
@@ -1070,7 +1097,10 @@ textarea.terminal-input-base {
   }
 
   .about-image {
-    height: 280px;
+    height: 400px;
+    aspect-ratio: 9 / 16;
+    max-width: 100%;
+    margin: 0 auto;
   }
 
   .fame-year {

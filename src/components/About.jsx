@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import profileImg from '../assets/gom.jpeg';
 import { Gamepad2, Dumbbell, Camera, Music } from 'lucide-react';
 
+const bgVideoSrc = '/background video.mp4';
+
 const InterestCard = ({ icon, title, desc, delay }) => (
     <motion.div
         className="interest-card"
@@ -41,10 +43,19 @@ const About = () => {
             {/* Bio Section */}
             <div className="about-grid">
                 <div className="about-image">
+                    {/* Background Video */}
+                    <video
+                        className="about-bg-video"
+                        src={bgVideoSrc}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                    />
                     <img
                         src={profileImg}
                         alt="Vedhant Bidari Profile"
-                        style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#000' }}
+                        className="about-profile-img"
                     />
                 </div>
 
@@ -54,10 +65,12 @@ const About = () => {
                         <TextReveal text="Vedhant Bidari" />
                     </h3>
                     <p className="about-desc">
-                        I engineering momentum. My code is a reflection of my discipline—structured, efficient, and built to perform under pressure.
+                        I'm Vedhant Bidari — a developer, designer, and relentless builder who thrives at the intersection of technology and creativity.
                         <br /><br />
-                        Born from the fast-paced world of competitive creative technology, I bridge the gap between complex logic and fluid design. Whether I'm architecting a scalable backend or fine-tuning a micro-interaction, my focus remains the same:
-                        <span style={{ color: 'var(--accent-orange)' }}> Impact through Precision.</span>
+                        From crafting pixel-perfect interfaces to engineering robust full-stack systems, I approach every project with the same philosophy:
+                        <span style={{ color: 'var(--accent-orange)' }}> Build with purpose. Ship with precision.</span>
+                        <br /><br />
+                        Whether it's a late-night debugging session or an early-morning brainstorm, I'm driven by the art of turning complex problems into elegant, impactful solutions.
                     </p>
 
                     <div className="stats-row">
