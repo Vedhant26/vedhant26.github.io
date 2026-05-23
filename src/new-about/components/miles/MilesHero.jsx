@@ -180,7 +180,7 @@ export default function MilesHero() {
                 border: '1px solid var(--r-accent-2)',
                 boxShadow: '0 0 10px var(--r-glow-2)',
               }}>
-                ⚡ ENTERING THE SPIDER-VERSE ⚡
+                ⚡ HELLO, MY NAME IS ⚡
               </span>
             </motion.div>
 
@@ -191,11 +191,11 @@ export default function MilesHero() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5, type: 'spring', stiffness: 80 }}
                 style={{
-                  fontFamily: "'Bangers', cursive",
-                  fontSize: 'clamp(4rem, 12vw, 11rem)',
-                  lineHeight: 0.9,
+                  fontFamily: "'Rock Salt', cursive",
+                  fontSize: 'clamp(2rem, 8vw, 8rem)',
+                  lineHeight: 1.2,
                   fontWeight: 400,
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.02em',
                   marginTop: '1.5rem',
                   position: 'relative',
                   color: '#ffffff',
@@ -238,13 +238,13 @@ export default function MilesHero() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.8, type: 'spring', stiffness: 60 }}
                 style={{
-                  fontFamily: "'Permanent Marker', cursive",
-                  fontSize: 'clamp(1.5rem, 5vw, 4rem)',
+                  fontFamily: "'Rock Salt', cursive",
+                  fontSize: 'clamp(1rem, 4vw, 4rem)',
                   fontWeight: 400,
                   color: '#ffffff',
-                  letterSpacing: '0.15em',
+                  letterSpacing: '0.05em',
                   textShadow: '0 0 15px var(--r-accent-2), 0 0 30px var(--r-accent-2)',
-                  marginTop: '-0.5rem',
+                  marginTop: '0.5rem',
                 }}
               >
                 BIDARI
