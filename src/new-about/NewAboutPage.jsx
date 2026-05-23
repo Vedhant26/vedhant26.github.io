@@ -136,11 +136,11 @@ function AboutContent() {
 export default function NewAboutPage() {
   return (
     <PageWrapper>
-      <AboutThemeProvider>
-        <div style={{ marginTop: '-100px' }}>
+      <div style={{ marginTop: '-100px' }}>
+        <AboutThemeProvider>
           <AboutContent />
-        </div>
-      </AboutThemeProvider>
+        </AboutThemeProvider>
+      </div>
     </PageWrapper>
   );
 }

@@ -191,19 +191,18 @@ export default function MilesHero() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5, type: 'spring', stiffness: 80 }}
                 style={{
-                  fontFamily: "'Outfit', sans-serif",
-                  fontSize: 'clamp(4rem, 15vw, 12rem)',
+                  fontFamily: "'Bangers', cursive",
+                  fontSize: 'clamp(4rem, 12vw, 11rem)',
                   lineHeight: 0.9,
-                  fontWeight: 900,
-                  fontStyle: 'italic',
-                  letterSpacing: '0.02em',
+                  fontWeight: 400,
+                  letterSpacing: '0.05em',
                   marginTop: '1.5rem',
                   position: 'relative',
                   color: '#ffffff',
                   textShadow: isGlitching
                     ? '-3px 0 var(--r-accent-1), 3px 0 var(--r-accent-2)'
-                    : '0 0 10px #fff, 0 0 20px var(--r-accent-1), 0 0 40px var(--r-accent-1), 0 0 80px var(--r-accent-1)',
-                  transform: isGlitching ? 'skewX(-12deg)' : 'skewX(-10deg)',
+                    : '0 0 15px var(--r-accent-1), 0 0 30px var(--r-accent-1)',
+                  transform: isGlitching ? 'skewX(-2deg)' : 'none',
                   transition: 'text-shadow 0.05s, transform 0.05s',
                 }}
               >
@@ -239,15 +238,13 @@ export default function MilesHero() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.8, type: 'spring', stiffness: 60 }}
                 style={{
-                  fontFamily: "'Outfit', sans-serif",
-                  fontSize: 'clamp(2rem, 8vw, 6rem)',
-                  fontWeight: 900,
-                  fontStyle: 'italic',
+                  fontFamily: "'Permanent Marker', cursive",
+                  fontSize: 'clamp(1.5rem, 5vw, 4rem)',
+                  fontWeight: 400,
                   color: '#ffffff',
-                  letterSpacing: '0.1em',
-                  textShadow: '0 0 10px #fff, 0 0 20px var(--r-accent-2), 0 0 40px var(--r-accent-2), 0 0 80px var(--r-accent-2)',
-                  marginTop: '0.5rem',
-                  transform: 'skewX(-10deg)',
+                  letterSpacing: '0.15em',
+                  textShadow: '0 0 15px var(--r-accent-2), 0 0 30px var(--r-accent-2)',
+                  marginTop: '-0.5rem',
                 }}
               >
                 BIDARI
