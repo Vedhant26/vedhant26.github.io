@@ -97,7 +97,7 @@ export default function MilesBio() {
               <span style={{ fontWeight: 700, color: 'var(--r-accent-2)', textShadow: '0 0 10px var(--r-glow-2)' }}>
                 Web Developer
               </span>{' '}
-              crafting next-generation interactive digital experiences with momentum and mastery.
+              — I'm Vedhant Bidari, a developer, designer, and relentless builder who thrives at the intersection of technology and creativity.
             </p>
             <p style={{ color: 'var(--r-text-muted)', lineHeight: 1.8, fontFamily: 'Inter, sans-serif' }}>
               {bio.longBio}
@@ -161,6 +161,7 @@ export default function MilesBio() {
                 position: 'relative',
               }}
             >
+
               {/* Duotone portrait */}
               <div
                 className="duotone-image-wrap"

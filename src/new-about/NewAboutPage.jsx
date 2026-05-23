@@ -137,7 +137,9 @@ export default function NewAboutPage() {
   return (
     <PageWrapper>
       <AboutThemeProvider>
-        <AboutContent />
+        <div style={{ marginTop: '-100px' }}>
+          <AboutContent />
+        </div>
       </AboutThemeProvider>
     </PageWrapper>
   );

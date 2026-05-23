@@ -113,14 +113,25 @@ export default function MilesHero() {
         className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center"
         style={{ background: 'var(--r-bg-primary)' }}
       >
-        {/* Deep background — halftone grid */}
-        <div
+        {/* Background video replacing the deep blue background */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
           style={{
-            position: 'absolute', inset: 0, zIndex: 0,
-            backgroundImage: `radial-gradient(circle, rgba(255,45,149,0.08) 1px, transparent 1px)`,
-            backgroundSize: '20px 20px',
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: 0.4,
+            zIndex: 0,
+            pointerEvents: 'none',
           }}
-        />
+        >
+          <source src="/background video.mp4" type="video/mp4" />
+        </video>
 
         {/* Diagonal neon streaks */}
         <div style={{
@@ -180,18 +191,19 @@ export default function MilesHero() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5, type: 'spring', stiffness: 80 }}
                 style={{
-                  fontFamily: "'Bangers', cursive",
-                  fontSize: 'clamp(4rem, 15vw, 14rem)',
+                  fontFamily: "'Outfit', sans-serif",
+                  fontSize: 'clamp(4rem, 15vw, 12rem)',
                   lineHeight: 0.9,
-                  fontWeight: 400,
-                  letterSpacing: '0.05em',
+                  fontWeight: 900,
+                  fontStyle: 'italic',
+                  letterSpacing: '0.02em',
                   marginTop: '1.5rem',
                   position: 'relative',
-                  color: 'var(--r-text-primary)',
+                  color: '#ffffff',
                   textShadow: isGlitching
                     ? '-3px 0 var(--r-accent-1), 3px 0 var(--r-accent-2)'
-                    : '0 0 40px var(--r-glow-1)',
-                  transform: isGlitching ? 'skewX(-2deg)' : 'none',
+                    : '0 0 10px #fff, 0 0 20px var(--r-accent-1), 0 0 40px var(--r-accent-1), 0 0 80px var(--r-accent-1)',
+                  transform: isGlitching ? 'skewX(-12deg)' : 'skewX(-10deg)',
                   transition: 'text-shadow 0.05s, transform 0.05s',
                 }}
               >
@@ -227,12 +239,15 @@ export default function MilesHero() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.8, type: 'spring', stiffness: 60 }}
                 style={{
-                  fontFamily: "'Permanent Marker', cursive",
-                  fontSize: 'clamp(1.5rem, 5vw, 4rem)',
-                  color: 'var(--r-accent-1)',
-                  letterSpacing: '0.15em',
-                  textShadow: '0 0 30px var(--r-glow-1), 0 0 60px var(--r-glow-1)',
-                  marginTop: '-0.5rem',
+                  fontFamily: "'Outfit', sans-serif",
+                  fontSize: 'clamp(2rem, 8vw, 6rem)',
+                  fontWeight: 900,
+                  fontStyle: 'italic',
+                  color: '#ffffff',
+                  letterSpacing: '0.1em',
+                  textShadow: '0 0 10px #fff, 0 0 20px var(--r-accent-2), 0 0 40px var(--r-accent-2), 0 0 80px var(--r-accent-2)',
+                  marginTop: '0.5rem',
+                  transform: 'skewX(-10deg)',
                 }}
               >
                 BIDARI
