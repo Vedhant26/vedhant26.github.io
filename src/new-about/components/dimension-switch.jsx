@@ -18,8 +18,8 @@ export default function DimensionSwitch() {
       <div className={`switch-hint-arrow ${currentReality}`}>
         <span>Switch Reality!</span>
         <svg width="40" height="40" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M 10,70 Q 50,20 90,50" />
-          <path d="M 65,35 L 90,50 L 70,75" />
+          <path d="M 50,90 Q 20,50 50,10" />
+          <path d="M 35,25 L 50,10 L 65,25" />
         </svg>
       </div>
 

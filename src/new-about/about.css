@@ -498,31 +498,30 @@
 
 .switch-hint-arrow {
   position: absolute;
-  right: calc(100% + 15px);
-  top: 50%;
-  transform: translateY(-50%);
+  top: calc(100% + 15px);
+  right: 50%;
+  transform: translateX(50%);
   display: flex;
+  flex-direction: column-reverse;
   align-items: center;
   gap: 12px;
   pointer-events: none;
   white-space: nowrap;
-  animation: arrowBounce 1.5s infinite;
+  animation: blinkBounce 1.5s infinite;
 }
-@keyframes arrowBounce {
-  0%, 100% { transform: translate(0, -50%); }
-  50% { transform: translate(-10px, -50%); }
+@keyframes blinkBounce {
+  0%, 100% { transform: translate(50%, 0); opacity: 1; }
+  50% { transform: translate(50%, -10px); opacity: 0.2; }
 }
-.switch-hint-arrow.miles {
-  color: var(--r-accent-1);
+.switch-hint-arrow.miles, .switch-hint-arrow.retro {
+  color: #ffffff;
   font-family: var(--r-font-accent);
   font-size: 1.2rem;
-  filter: drop-shadow(0 0 5px var(--r-glow-1));
-}
-.switch-hint-arrow.retro {
-  color: #ffd700;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 0.6rem;
-  text-shadow: 2px 2px 0 #8B6914;
+  text-shadow: 
+    0 0 5px #ffffff,
+    0 0 10px #ffffff,
+    0 0 20px rgba(255, 255, 255, 0.8);
+  filter: drop-shadow(0 0 5px #ffffff);
 }
 
 /* Miles mode button */
