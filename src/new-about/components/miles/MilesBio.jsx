@@ -162,48 +162,17 @@ export default function MilesBio() {
               }}
             >
 
-              {/* Duotone portrait */}
-              <div
-                className="duotone-image-wrap"
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(135deg, var(--r-accent-1), var(--r-accent-4))',
-                }}
-              >
-                <img
-                  src={bio.avatar}
-                  alt={bio.name}
-                  loading="eager"
-                  className="duotone-image"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    filter: 'grayscale(100%) contrast(1.2) brightness(1.1)',
-                    mixBlendMode: 'multiply',
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(135deg, rgba(255, 45, 149, 0.25), rgba(0, 212, 255, 0.15))',
-                    mixBlendMode: 'screen',
-                    pointerEvents: 'none',
-                  }}
-                />
-              </div>
 
-              {/* Halftone over portrait */}
-              <div
+              {/* Clean portrait */}
+              <img
+                src={bio.avatar}
+                alt={bio.name}
+                loading="eager"
                 style={{
-                  position: 'absolute',
-                  inset: 0,
-                  backgroundImage: 'radial-gradient(circle, rgba(0,0,0,0.15) 1px, transparent 1px)',
-                  backgroundSize: '3px 3px',
-                  pointerEvents: 'none',
-                  zIndex: 2,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
                 }}
               />
             </div>
