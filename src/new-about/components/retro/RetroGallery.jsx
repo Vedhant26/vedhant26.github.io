@@ -35,11 +35,6 @@ export default function RetroGallery() {
                 loading="lazy"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               />
-              {/* Label */}
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.75)', padding: '6px',
-                fontFamily: "'Press Start 2P', monospace", fontSize: '0.45rem', color: 'var(--r-accent-2)', textAlign: 'center', letterSpacing: '1px' }}>
-                {img.alt}
-              </div>
             </motion.div>
           ))}
         </div>

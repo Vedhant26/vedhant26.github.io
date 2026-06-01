@@ -56,10 +56,6 @@ export default function MilesGallery() {
                 loading="lazy"
                 className="clean-gallery-img"
               />
-              {/* Caption overlay */}
-              <div className={`clean-gallery-caption ${hoveredIndex === index ? 'visible' : ''}`}>
-                <span className="clean-gallery-caption-text">{image.alt}</span>
-              </div>
             </motion.div>
           ))}
         </div>
