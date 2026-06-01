@@ -47,11 +47,13 @@ export default function RetroGallery() {
 
       <style>{`
         .retro-gallery-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
           gap: 12px;
         }
         .retro-gallery-square {
+          width: calc(25% - 9px);
           transition: transform 0.3s ease, box-shadow 0.3s ease;
           cursor: pointer;
         }
@@ -60,20 +62,24 @@ export default function RetroGallery() {
           box-shadow: 0 0 16px rgba(255, 191, 0, 0.3);
         }
         @media (max-width: 1024px) {
-          .retro-gallery-grid {
-            grid-template-columns: repeat(3, 1fr);
+          .retro-gallery-square {
+            width: calc(33.333% - 8px);
           }
         }
         @media (max-width: 768px) {
           .retro-gallery-grid {
-            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
+          }
+          .retro-gallery-square {
+            width: calc(50% - 5px);
           }
         }
         @media (max-width: 480px) {
           .retro-gallery-grid {
-            grid-template-columns: repeat(2, 1fr);
             gap: 8px;
+          }
+          .retro-gallery-square {
+            width: calc(50% - 4px);
           }
         }
       `}</style>

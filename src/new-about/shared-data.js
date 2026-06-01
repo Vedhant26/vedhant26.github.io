@@ -89,10 +89,8 @@ export const socialLinks = [
 export const galleryImages = [
   { src: '/images/lorenzo-piloto1.jpeg', alt: 'Action shot 1' },
   { src: '/images/lorenzo-piloto2.jpeg', alt: 'Action shot 2' },
-  { src: '/images/lofan/baba.jpeg', alt: 'Fan moment' },
   { src: '/images/lofan/vbb.jpeg', alt: 'Fan moment 2' },
   { src: '/images/lorenzo-piloto7.jpeg', alt: 'Action shot 3' },
-  { src: '/images/lorenzo-piloto5.jpeg', alt: 'Action shot 4' },
   { src: '/images/lorenzo-podio3.jpeg', alt: 'Podium celebration 1' },
   { src: '/images/dasdas.jpeg', alt: 'Podium celebration 2' },
 ];

@@ -64,13 +64,15 @@ export default function MilesGallery() {
       <style>{`
         /* ── CLEAN SQUARE GRID ── */
         .clean-gallery-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
           gap: 14px;
         }
 
         .clean-gallery-item {
           position: relative;
+          width: calc(25% - 11px);
           aspect-ratio: 1 / 1;
           border-radius: 10px;
           overflow: hidden;
@@ -125,23 +127,26 @@ export default function MilesGallery() {
 
         /* ── RESPONSIVE ── */
         @media (max-width: 1024px) {
-          .clean-gallery-grid {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+          .clean-gallery-item {
+            width: calc(33.333% - 9px);
           }
         }
 
         @media (max-width: 768px) {
           .clean-gallery-grid {
-            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
+          }
+          .clean-gallery-item {
+            width: calc(50% - 5px);
           }
         }
 
         @media (max-width: 480px) {
           .clean-gallery-grid {
-            grid-template-columns: repeat(2, 1fr);
             gap: 8px;
+          }
+          .clean-gallery-item {
+            width: calc(50% - 4px);
           }
         }
       `}</style>
