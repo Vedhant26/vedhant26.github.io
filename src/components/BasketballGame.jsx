@@ -280,6 +280,7 @@ const BasketballGame = () => {
             // Navigate after warp reaches peak white
             const timer = setTimeout(() => {
                 navigate('/about');
+                window.scrollTo(0, 0);
             }, 3200);
             return () => clearTimeout(timer);
         }
