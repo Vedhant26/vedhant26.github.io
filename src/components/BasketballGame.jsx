@@ -279,7 +279,7 @@ const BasketballGame = () => {
         if (scored) {
             // Navigate after warp reaches peak white
             const timer = setTimeout(() => {
-                navigate('/journey');
+                navigate('/about');
             }, 3200);
             return () => clearTimeout(timer);
         }
